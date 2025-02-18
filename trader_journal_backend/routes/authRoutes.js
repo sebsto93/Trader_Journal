@@ -11,19 +11,20 @@ router.post('/register', async (req, res) => {
     try {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ message: 'Użytkownik już istnieje'});
+            return res.status(400).json({ message: 'Użytkownik już istnieje' });
         }
 
-        const newUser = new User({ email, password });
+        const hashedPassword = await bcrypt.hash(password, 10); 
+        const newUser = new User({ email, password: hashedPassword });
         await newUser.save();
         res.status(201).json({ message: 'Rejestracja zakończona sukcesem' });
     } catch (err) {
-        res.status(500).json({ message: 'Bląd serwera' });
+        res.status(500).json({ message: 'Błąd serwera' });
     }
 });
 
-// Logowanie
 
+// Logowanie
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -34,13 +35,15 @@ router.post('/login', async (req, res) => {
 
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-            return res.status(400).json({ message: 'Nieprawidłowe has' });
+            return res.status(400).json({ message: 'Nieprawidłowe hasło' });
         }
 
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h'});
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
         res.json({ token });
     } catch (err) {
-        res.status(500).json({ message : 'Błąd serwera' });
+        console.error(err); 
+        res.status(500).json({ message: 'Błąd serwera', error: err.message });
     }
 });
 
