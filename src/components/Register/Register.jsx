@@ -5,12 +5,13 @@ import axios from 'axios';
 const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5174/api/auth/register', {email, password});
+            await axios.post('http://localhost:5000/api/auth/register', {email, password});
             navigate('/login');
         } catch (error) {
             console.error('Błąd rejestracji', error)
@@ -18,6 +19,7 @@ const Register = () => {
     };
 
 return (
+    <div>
     <form onSubmit={handleSubmit}>
         <input
         type="email"
@@ -34,6 +36,8 @@ return (
         required/>
         <button type="submit">Zarejestruj się</button>
     </form>
+    {error && <p style={{ color: 'red' }}>{error}</p>}
+    </div>
 );
 };
 
