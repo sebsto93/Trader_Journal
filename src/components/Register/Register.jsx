@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { register } from '../../api/authApi';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -13,11 +13,11 @@ const Register = () => {
     e.preventDefault();
     try {
       console.log('Wysyłanie danych rejestracji:', { email, password });
-      await axios.post('http://localhost:5000/api/auth/register', { email, password });
+      await register(email, password);
       navigate('/login');
     } catch (error) {
       console.error('Błąd rejestracji', error.response ? error.response.data : error);
-      setError(error.response?.data?.message || 'Wystąpił błąd podczas rejestracji'); 
+      setError(error.response?.data?.message || 'Wystąpił błąd podczas rejestracji');
     }
   };
 
