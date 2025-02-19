@@ -17,7 +17,7 @@ const Register = () => {
       navigate('/login');
     } catch (error) {
       console.error('Błąd rejestracji', error.response ? error.response.data : error);
-      setError(error.response?.data?.message || 'Wystąpił błąd podczas rejestracji'); // Ustawienie błędu w stanie
+      setError(error.response?.data?.message || 'Wystąpił błąd podczas rejestracji'); 
     }
   };
 
